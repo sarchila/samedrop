@@ -1,0 +1,10 @@
+flask/
+lib/
+
+# Build / dist / OS cruft / etc.
+.cache
+__pycache__/
+*.pyc
+*.pyo
+*.mo
+.DS_Store

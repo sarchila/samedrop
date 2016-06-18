@@ -1,0 +1,24 @@
+.mbs {
+  margin-bottom: 5px;
+}
+
+.mvm {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.alert-container {
+  text-align: center;
+}
+
+.alert {
+  width: 500px;
+  max-width: 80%;
+  display: inline-block;
+}
+
+@media (min-width: 768px) {
+  .form-inline > .form-group > label {
+    margin-left: 20px;
+  }
+}

@@ -1,0 +1,238 @@
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>#samedrop</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" <="" head="">
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+  <script src="https://code.jquery.com/jquery-3.0.0.min.js" integrity="sha256-JmvOoLtYsmqlsWxa7mDSLMwa6dZ9rrIdtrrVYRnDRH0=" crossorigin="anonymous"></script>
+  <script type="text/javascript" charset="utf-8" async="" src="https://platform.twitter.com/js/timeline.f80add415609dfac297fd37eb66584ee.js"></script>
+  <script>
+    $( document ).ready(function() {
+      function nameValueAssignment(retVal, input) {
+        retVal[input.name] = input.value;
+        return retVal;
+      }
+
+      function resetForm() {
+        $('#samedrop_forms input').val('');
+        $('#samedrop_forms select').val('Select meter');
+      }
+
+      $('#form_submit').click(function (e) {
+        e.preventDefault();
+
+        var postObj = $('#email_input, #test_date_input')
+          .serializeArray()
+          .reduce(nameValueAssignment, {});
+
+        var glucoseTests = Array.prototype.slice.call($('.js-glucose-test-row').map(function () {
+          return $(this)
+            .find('.form-control')
+            .serializeArray()
+            .reduce(nameValueAssignment, {});
+        }));
+
+        postObj['glucose_tests'] = glucoseTests;
+
+        $.ajax({
+          url: '/api/samedrops',
+          data: JSON.stringify(postObj),
+          contentType: 'application/json',
+          type: 'POST',
+        }).then(function() {
+          $('body > .alert-container').remove();
+          $('<div class="alert-container"><div class="alert alert-success" role="alert">' +
+            '<strong>Submission successful!</strong> Thanks for your participation.</div></div>')
+            .prependTo('body');
+          resetForm();
+        }, function (err) {
+          $('<div class="alert-container"><div class="alert alert-danger" role="alert">' +
+            'An error occurred submitting your information.</div></div>')
+            .prependTo('body');
+        });
+      })
+    });
+  </script>
+</head>
+
+<body>
+  <div class="container">
+    <div class="row mvm">
+      <div class="col-sm-4"><h1>#samedrop</h1></div>
+      <div class="col-sm-8 text-right">
+        <ul class="list-inline">
+          <li><a href="#instructions">Instructions</a></li>
+          <li><a href="#results">Results</a></li>
+          <li><a href="#what_is_this">What is this?</a></li>
+          <li><a href="#disclaimer">Disclaimer</a></li>
+          <li><a href="#">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+    <div>
+      <div id='samedrop_forms'>
+        <div class="row">
+          <div class="col-sm-6">
+            <div class="form-group">
+              <label for="email">Email (optional)</label>
+              <input type="email" class="form-control" name="email" id="email_input" placeholder="jane.doe@example.com" />
+              <span id="helpBlock" class="help-block">
+                Your email will only be used to generate a unique key and will not be stored.
+              </span>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="form-group">
+              <label for="test_date">Test date</label>
+              <input type="date" class="form-control" name="test_date" id="test_date_input"/>
+            </div>
+          </div>
+        </div>
+
+        <form>
+          <div class="form-inline mvm js-glucose-test-row">
+            <div class="mbs" style="display: inline-block;"><strong>Glucose test #1</strong></div>
+            <div class="form-group">
+              <select class="form-control" name="meter">
+                <option selected>Select meter</option>
+                {% for meter in meters %}
+                <option value="{{ meter.display_name }}">{{ meter.display_name }}</option>
+                {% endfor %}
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>Reading <input type="number" class="form-control" name="reading" style="max-width: 100px;"/></label>
+            </div>
+            <div class="form-group">
+              <div class="radio">
+                <label><input class="form-control" type="radio" name="units" value="mg_dl" checked>mg/dL</label>
+                <label><input class="form-control" type="radio" name="units" value="mmol_l"> mmol/L</label>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Strip lot # (optional) <input type="text" class="form-control" name="strip_lot"/></label>
+            </div>
+          </div>
+        </form>
+
+        <form>
+          <div class="form-inline mvm js-glucose-test-row">
+            <div class="mbs" style="display: inline-block;"><strong>Glucose test #2</strong></div>
+            <div class="form-group">
+              <select class="form-control" name="meter">
+                <option selected>Select meter</option>
+                {% for meter in meters %}
+                <option value="{{ meter.display_name }}">{{ meter.display_name }}</option>
+                {% endfor %}
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>Reading <input type="number" class="form-control" name="reading" style="max-width: 100px;"/></label>
+            </div>
+            <div class="form-group">
+              <div class="radio">
+                <label><input class="form-control" type="radio" name="units" value="mg_dl" checked>mg/dL</label>
+                <label><input class="form-control" type="radio" name="units" value="mmol_l"> mmol/L</label>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Strip lot # (optional) <input type="text" class="form-control" name="strip_lot"/></label>
+            </div>
+          </div>
+        </form>
+
+        <button id="form_submit" class="btn btn-primary mtm">Submit</button>
+      </div>
+      <div class="row">
+        <div class="col-sm-7">
+          <div id="instructions">
+            <h2>Instructions</h2>
+            <iframe width="420" height="236" src="https://www.youtube.com/embed/QUE7og9akHs"></iframe>
+            <ul>
+              <li>Wash and dry hands</li>
+              <li>Open meter cases and arrange meters</li>
+              <li>Insert a new lancet into the lancing device</li>
+              <li>Remove a test strip from each meter’s strip vial and insert strips into meters</li>
+              <li>Use lancing device to prick fingertip; squeeze base of fingertip to present a large drop of blood</li>
+              <li>Apply the blood to each test strip; do not wait for results before proceeding to next meter</li>
+              <li>Record and submit results</li></ul>
+
+              <p>
+                The key to this testing is using the same blood sample to supply multiple meters. If you instead use different
+                samples—even in rapid succession—you introduce a number of confounding factors, including sample contamination
+                and legitimate sample inconsistency, perhaps caused by local or temporal variations in glucose concentrations.
+                Due to the sparse blood sample requirements of modern meters, a sample of the size required to supply multiple
+                meters can be easily obtained.
+              </p>
+            </div>
+          </div>
+          <div class="col-sm-5 text-right">
+            <a class="twitter-timeline" href="https://twitter.com/hashtag/samedrop" data-widget-id="736102109368619009">#samedrop Tweet</a>
+          </div>
+        </div>
+        <div id="results">
+          <h2>Results</h2>
+          <p>The results of these tests are available to everyone, with no participation or registration required. Making
+            the results public is important for both the transparency of the project and to encourage alternative analyses.
+            If the data were locked up or restricted, the conclusions drawn would be narrow and bottlenecked. By making the
+            data accessible, anyone can come up with and test their own hypotheses.<br />
+            <br />
+            The full dataset is available here as a CSV file, which can be downloaded and imported into your favorite tool —
+            Excel, R, Google Sheets, Stata, whatever.<br />
+            <br />
+            An explanation of the column headers follows:
+          </p>
+          <ul>
+            <li>Date: Date of the test</li>
+            <li>PatientID: Identifier for the individual performing the test, or "anonymous" if data submitted anonymously</li>
+            <li>SampleID: Identifier for the blood sample used in the test; automatically generated at submission</li>
+            <li>TestID: Identifier for the blood glucose test; automatically generated at submission</li>
+            <li>Meter: Brand and model of the glucose meter</li>
+            <li>Result: Blood glucose as displayed by the glucose meter</li>
+            <li>Units: Units for the blood glucose results; either [mg/dL] or [mmol/dL]</li>
+            <li>StripLotNumber (optional): Lot number of the test strip</li>
+          </ul>
+        </div>
+        <div id="what_is_this">
+          <h2>What Is This?</h2>
+          <p>
+            This project emerged from some citizen scientist work on comparative glucose meter testing:<br />
+            <br />
+            <a href="https://medium.com/@chrishannemann/a-craftsman-blames-his-tools-blood-glucose-meter-accuracy-long-term-diabetes-control-9caac073dae9">A Craftsman Blames His Tools: Blood Glucose Meter Accuracy &amp; Long-Term Diabetes Control</a><br />
+            <br />
+            <a href="https://medium.com/@chrishannemann/measure-seventy-five-times-cut-once-further-blood-glucose-meter-testing-9e769a853710">Measure Seventy-Five Times, Cut Once: Further Blood Glucose Meter Testing</a><br />
+            <br />
+            Because we don’t have access to laboratory-grade glucose measurement equipment, we decided that a side-by-side
+            comparison of consumer meters would be a reasonable way to test the hypothesis—namely, that these home glucose
+            meters vary quite a bit from one another. Importantly, this project is not interested in determining which glucose
+            meter is objectively the most accurate. While that is certainly important, it is the concern of many other studies
+            and requires a different set of tools. Instead, this is a framework for comparing glucose meters across brands,
+            strip lots, and individuals to understand how they differ.
+          </p>
+        </div>
+        <div id="disclaimer">
+          <h2>Disclaimer</h2>
+          <p>
+            Participation in this project is completely voluntary. While we will do our best, we cannot gurantee privacy of
+            any data submitted. As explained in the Results section above, the data submitted through the form is made publicly
+            available. While login information will not be made public, there is potential for submitted data to be connected
+            back to a user. For example, if a photo of glucose results are posted publicly by the user (to Twitter, for example),
+            and then cross-referenced against the database, an individual could feasibly determine the other results in the
+            database associated with this user using the PatientID field. If this risk is unacceptable, it is recommended that
+            you not log in.<br />
+            <br />
+            You can choose to participate without logging in by checking the "Submit Data Anonymously" button. This is still
+            very useful to the project, though it carries a bit less weight as it cannot be used in some types of analysis,
+            such as intra- and inter-user variation. In aggregate, anonymous data is still extremely valuable, and we respect
+            your right to make this choice.
+          </p>
+        </div>
+      </div>
+    </div>
+    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+  </body>
+  </html>
