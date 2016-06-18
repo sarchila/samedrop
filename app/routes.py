@@ -33,7 +33,7 @@ def create_samedrop():
         abort(400)
 
     for glucose_test in request.json['glucose_tests']:
-        if glucose_test['meter'] == "Select meter" or not glucose_test['reading']:
+        if not glucose_test['meter'] or glucose_test['meter'] == "Select meter" or not glucose_test['reading']:
             abort(400)
 
     samedrop = models.Samedrop(

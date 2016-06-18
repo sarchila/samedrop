@@ -18,6 +18,40 @@
         $('#samedrop_forms select').val('Select meter');
       }
 
+      function addGlucoseTest() {
+        var form = '<form>' +
+          '<div class="form-inline mvm js-glucose-test-row">' +
+            '<div class="mbs" style="display: inline-block;">' +
+            '<strong>Glucose test #' + ($('.js-glucose-test-row').length + 1) + '&nbsp;</strong></div>' +
+            '<div class="form-group">' +
+              '<select class="form-control" name="meter">' +
+                '<option selected>Select meter</option>' +
+                '{% for meter in meters %}' +
+                '<option value="{{ meter.display_name }}">{{ meter.display_name }}</option>' +
+                '{% endfor %}' +
+              '</select>' +
+            '</div>' +
+            '<div class="form-group">' +
+              '<label>Reading <input type="number" class="form-control" name="reading" style="max-width: 100px;"/></label>' +
+            '</div>' +
+            '<div class="form-group">' +
+              '<div class="radio">' +
+                '<label><input class="form-control" type="radio" name="units" value="mg_dl" checked>mg/dL</label>' +
+                '<label><input class="form-control" type="radio" name="units" value="mmol_l"> mmol/L</label>' +
+              '</div>' +
+            '</div>' +
+            '<div class="form-group">' +
+              '<label>Strip lot # (optional) <input type="text" class="form-control" name="strip_lot"/></label>' +
+            '</div>' +
+          '</div>' +
+        '</form>';
+
+
+
+        $('.js-glucose-test-row').last().after(form);
+      }
+
+      $('.js-add-glucose-test').click(addGlucoseTest);
       $('#form_submit').click(function (e) {
         e.preventDefault();
 
@@ -145,7 +179,9 @@
           </div>
         </form>
 
-        <button id="form_submit" class="btn btn-primary mtm">Submit</button>
+        <button class="btn btn-default js-add-glucose-test">+ Add another glucose test</button><br/>
+
+        <button id="form_submit" class="btn btn-primary mvm">Submit</button>
       </div>
       <div class="row">
         <div class="col-sm-7">
