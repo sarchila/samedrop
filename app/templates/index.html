@@ -1,6 +1,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
   <title>#samedrop</title>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" <="" head="">
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
@@ -37,6 +38,8 @@
             '<div class="form-group">' +
               '<div class="radio">' +
                 '<label><input class="form-control" type="radio" name="units" value="mg_dl" checked>mg/dL</label>' +
+              '</div>' +
+              '<div class="radio">' +
                 '<label><input class="form-control" type="radio" name="units" value="mmol_l"> mmol/L</label>' +
               '</div>' +
             '</div>' +
@@ -140,8 +143,10 @@
             </div>
             <div class="form-group">
               <div class="radio">
-                <label><input class="form-control" type="radio" name="units" value="mg_dl" checked>mg/dL</label>
-                <label><input class="form-control" type="radio" name="units" value="mmol_l"> mmol/L</label>
+                <input class="form-control" type="radio" name="units" value="mg_dl" checked> mg/dL
+              </div>
+              <div class="radio">
+                <input class="form-control" type="radio" name="units" value="mmol_l"> mmol/L
               </div>
             </div>
 
@@ -168,8 +173,10 @@
             </div>
             <div class="form-group">
               <div class="radio">
-                <label><input class="form-control" type="radio" name="units" value="mg_dl" checked>mg/dL</label>
-                <label><input class="form-control" type="radio" name="units" value="mmol_l"> mmol/L</label>
+                <input class="form-control" type="radio" name="units" value="mg_dl" checked> mg/dL
+              </div>
+              <div class="radio">
+                <input class="form-control" type="radio" name="units" value="mmol_l"> mmol/L
               </div>
             </div>
 
