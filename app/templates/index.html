@@ -15,7 +15,11 @@
       }
 
       function resetForm() {
-        $('#samedrop_forms input').val('');
+        var typesToClear = ['text','number','email','date'],
+          $resetInputTypes = typesToClear.map(function (type) {
+            return 'input[type="' + type + '"]';
+          }).join(',');
+        $($resetInputTypes).val('');
         $('#samedrop_forms select').val('Select meter');
       }
 
